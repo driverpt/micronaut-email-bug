@@ -15,17 +15,41 @@ repositories {
 }
 
 dependencies {
+    runtimeOnly("org.yaml:snakeyaml")
+
+    annotationProcessor("org.projectlombok:lombok")
     annotationProcessor("io.micronaut:micronaut-http-validation")
-    implementation("io.micronaut:micronaut-aop")
+    annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
+    annotationProcessor("io.micronaut:micronaut-inject-java")
+    annotationProcessor("io.micronaut.openapi:micronaut-openapi")
+    annotationProcessor("io.micronaut.validation:micronaut-validation-processor")
+    annotationProcessor("io.micronaut.tracing:micronaut-tracing-opentelemetry-annotation")
+
+    implementation("io.swagger.core.v3:swagger-annotations")
+
+    implementation("io.micronaut:micronaut-http-client")
     implementation("io.micronaut:micronaut-jackson-databind")
-    implementation("io.micronaut.aws:micronaut-aws-sdk-v2")
-    implementation("io.micronaut.cache:micronaut-cache-caffeine")
+    implementation("io.micronaut:micronaut-runtime")
+    implementation("io.micronaut.reactor:micronaut-reactor")
+
+    // Email
+    implementation("io.micronaut.email:micronaut-email-template")
     implementation("io.micronaut.email:micronaut-email-amazon-ses")
     implementation("io.micronaut.email:micronaut-email-template")
+
+    implementation("io.micronaut.validation:micronaut-validation")
+    implementation("io.micronaut.beanvalidation:micronaut-hibernate-validator")
     implementation("io.micronaut.reactor:micronaut-reactor")
     implementation("jakarta.annotation:jakarta.annotation-api")
     runtimeOnly("ch.qos.logback:logback-classic")
     testImplementation("io.micronaut:micronaut-http-client")
+
+    testImplementation("io.micronaut.test:micronaut-test-rest-assured")
+    testImplementation("org.testcontainers:junit-jupiter")
+    testImplementation("org.testcontainers:localstack")
+    testImplementation("org.testcontainers:testcontainers")
+    // Workaround until Test Containers 2.0
+    testImplementation("com.amazonaws:aws-java-sdk-core:1.12.372")
 }
 
 
@@ -39,17 +63,18 @@ java {
 
 graalvmNative.toolchainDetection.set(false)
 micronaut {
-    runtime("netty")
+    runtime("lambda_provided")
     testRuntime("junit5")
     processing {
         incremental(true)
         annotations("com.example.*")
     }
+
     aot {
     // Please review carefully the optimizations enabled below
     // Check https://micronaut-projects.github.io/micronaut-aot/latest/guide/ for more details
-        optimizeServiceLoading.set(false)
-        convertYamlToJava.set(false)
+        optimizeServiceLoading.set(true)
+        convertYamlToJava.set(true)
         precomputeOperations.set(true)
         cacheEnvironment.set(true)
         optimizeClassLoading.set(true)

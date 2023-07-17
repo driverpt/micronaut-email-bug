@@ -1,0 +1,4 @@
+<html>
+<head>Some Email</head>
+<body>Hello $user</body>
+</html>
